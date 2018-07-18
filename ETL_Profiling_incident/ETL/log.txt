@@ -1,0 +1,174 @@
+[lz1714@login-1-1 project]$ hdfs dfs -chmod a+x project/python_code/incid_mapper1.py
+[lz1714@login-1-1 project]$ hdfs dfs -chmod a+x project/python_code/incid_mapper2.py
+[lz1714@login-1-1 project]$ hdfs dfs -chmod a+x project/python_code/incid_reducer1.py
+[lz1714@login-1-1 project]$ hdfs dfs -ls /user/lz1714/project/output
+ls: `/user/lz1714/project/output': No such file or directory
+[lz1714@login-1-1 project]$ hadoop jar /opt/cloudera/parcels/CDH-5.11.1-1.cdh5.11.1.p0.4/lib/hadoop-mapreduce/hadoop-streaming.jar \
+> -D mapreduce.job.reduces=1 \
+> -files hdfs://dumbo/user/lz1714/project/python_code/incid_mapper1.py,hdfs://dumbo/user/lz1714/project/python_code/incid_reducer1.py \
+> -mapper "python incid_mapper1.py" \
+> -reducer "python incid_reducer1.py" \
+> -input /user/lz1714/project/NYC.csv \
+> -output /user/lz1714/project/output
+packageJobJar: [] [/opt/cloudera/parcels/CDH-5.11.1-1.cdh5.11.1.p0.4/jars/hadoop-streaming-2.6.0-cdh5.11.1.jar] /tmp/streamjob1074741985354459413.jar tmpDir=null
+18/07/17 23:47:00 INFO mapred.FileInputFormat: Total input paths to process : 1
+18/07/17 23:47:01 INFO mapreduce.JobSubmitter: number of splits:2
+18/07/17 23:47:01 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1528077494936_4915
+18/07/17 23:47:01 INFO impl.YarnClientImpl: Submitted application application_1528077494936_4915
+18/07/17 23:47:01 INFO mapreduce.Job: The url to track the job: http://babar.es.its.nyu.edu:8088/proxy/application_1528077494936_4915/
+18/07/17 23:47:01 INFO mapreduce.Job: Running job: job_1528077494936_4915
+18/07/17 23:47:05 INFO mapreduce.Job: Job job_1528077494936_4915 running in uber mode : false
+18/07/17 23:47:05 INFO mapreduce.Job:  map 0% reduce 0%
+18/07/17 23:47:19 INFO mapreduce.Job:  map 50% reduce 0%
+18/07/17 23:47:21 INFO mapreduce.Job:  map 100% reduce 0%
+18/07/17 23:47:26 INFO mapreduce.Job:  map 100% reduce 100%
+18/07/17 23:47:27 INFO mapreduce.Job: Job job_1528077494936_4915 completed successfully
+18/07/17 23:47:27 INFO mapreduce.Job: Counters: 53
+	File System Counters
+		FILE: Number of bytes read=1422331
+		FILE: Number of bytes written=3213644
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=14513118
+		HDFS: Number of bytes written=1620490
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=97568
+		Total time spent by all reduces in occupied slots (ms)=13920
+		Total time spent by all map tasks (ms)=24392
+		Total time spent by all reduce tasks (ms)=2320
+		Total vcore-milliseconds taken by all map tasks=24392
+		Total vcore-milliseconds taken by all reduce tasks=2320
+		Total megabyte-milliseconds taken by all map tasks=99909632
+		Total megabyte-milliseconds taken by all reduce tasks=14254080
+	Map-Reduce Framework
+		Map input records=47057
+		Map output records=21796
+		Map output bytes=4965269
+		Map output materialized bytes=1384952
+		Input split bytes=184
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=5862
+		Reduce shuffle bytes=1384952
+		Reduce input records=21796
+		Reduce output records=6517
+		Spilled Records=43592
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=583
+		CPU time spent (ms)=13750
+		Physical memory (bytes) snapshot=2551730176
+		Virtual memory (bytes) snapshot=11196375040
+		Total committed heap usage (bytes)=4400349184
+		Peak Map Physical memory (bytes)=1101324288
+		Peak Map Virtual memory (bytes)=3730763776
+		Peak Reduce Physical memory (bytes)=364085248
+		Peak Reduce Virtual memory (bytes)=3736834048
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters
+		Bytes Read=14512934
+	File Output Format Counters
+		Bytes Written=1620490
+18/07/17 23:47:27 INFO streaming.StreamJob: Output directory: /user/lz1714/project/output
+[lz1714@login-1-1 project]$ hdfs dfs -ls /user/lz1714/project/output
+Found 2 items
+-rw-------+  3 lz1714 users          0 2018-07-17 23:47 /user/lz1714/project/output/_SUCCESS
+-rw-------+  3 lz1714 users    1620490 2018-07-17 23:47 /user/lz1714/project/output/part-00000
+[lz1714@login-1-1 project]$ hadoop jar /opt/cloudera/parcels/CDH-5.11.1-1.cdh5.11.1.p0.4/lib/hadoop-mapreduce/hadoop-streaming.jar \
+> -D mapreduce.job.reduces=1 \
+> -files hdfs://dumbo/user/lz1714/project/python_code/incid_mapper2.py \
+> -mapper "python incid_mapper2.py" \
+> -input /user/lz1714/project/output/part-00000 \
+> -output /user/lz1714/project/output_final
+packageJobJar: [] [/opt/cloudera/parcels/CDH-5.11.1-1.cdh5.11.1.p0.4/jars/hadoop-streaming-2.6.0-cdh5.11.1.jar] /tmp/streamjob1650081558910956989.jar tmpDir=null
+18/07/17 23:49:20 INFO mapred.FileInputFormat: Total input paths to process : 1
+18/07/17 23:49:21 INFO mapreduce.JobSubmitter: number of splits:2
+18/07/17 23:49:21 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1528077494936_4917
+18/07/17 23:49:21 INFO impl.YarnClientImpl: Submitted application application_1528077494936_4917
+18/07/17 23:49:21 INFO mapreduce.Job: The url to track the job: http://babar.es.its.nyu.edu:8088/proxy/application_1528077494936_4917/
+18/07/17 23:49:21 INFO mapreduce.Job: Running job: job_1528077494936_4917
+18/07/17 23:49:25 INFO mapreduce.Job: Job job_1528077494936_4917 running in uber mode : false
+18/07/17 23:49:25 INFO mapreduce.Job:  map 0% reduce 0%
+18/07/17 23:49:34 INFO mapreduce.Job:  map 50% reduce 0%
+18/07/17 23:49:35 INFO mapreduce.Job:  map 100% reduce 0%
+18/07/17 23:49:39 INFO mapreduce.Job:  map 100% reduce 100%
+18/07/17 23:49:40 INFO mapreduce.Job: Job job_1528077494936_4917 completed successfully
+18/07/17 23:49:40 INFO mapreduce.Job: Counters: 53
+	File System Counters
+		FILE: Number of bytes read=46426
+		FILE: Number of bytes written=498537
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=1662417
+		HDFS: Number of bytes written=160255
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=58968
+		Total time spent by all reduces in occupied slots (ms)=13494
+		Total time spent by all map tasks (ms)=14742
+		Total time spent by all reduce tasks (ms)=2249
+		Total vcore-milliseconds taken by all map tasks=14742
+		Total vcore-milliseconds taken by all reduce tasks=2249
+		Total megabyte-milliseconds taken by all map tasks=60383232
+		Total megabyte-milliseconds taken by all reduce tasks=13817856
+	Map-Reduce Framework
+		Map input records=6517
+		Map output records=8933
+		Map output bytes=160255
+		Map output materialized bytes=48573
+		Input split bytes=204
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=327
+		Reduce shuffle bytes=48573
+		Reduce input records=8933
+		Reduce output records=8933
+		Spilled Records=17866
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=714
+		CPU time spent (ms)=14570
+		Physical memory (bytes) snapshot=2543439872
+		Virtual memory (bytes) snapshot=11192635392
+		Total committed heap usage (bytes)=4392484864
+		Peak Map Physical memory (bytes)=1097875456
+		Peak Map Virtual memory (bytes)=3727130624
+		Peak Reduce Physical memory (bytes)=359170048
+		Peak Reduce Virtual memory (bytes)=3738775552
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters
+		Bytes Read=1662213
+	File Output Format Counters
+		Bytes Written=160255
+18/07/17 23:49:40 INFO streaming.StreamJob: Output directory: /user/lz1714/project/output_final
+[lz1714@login-1-1 project]$ hdfs dfs -ls /user/lz1714/project/output_final
+Found 2 items
+-rw-------+  3 lz1714 users          0 2018-07-17 23:49 /user/lz1714/project/output_final/_SUCCESS
+-rw-------+  3 lz1714 users     160255 2018-07-17 23:49 /user/lz1714/project/output_final/part-00000
