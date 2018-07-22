@@ -23,6 +23,7 @@ def process(line):
     dt_format = "%Y-%m-%d %H:%M:%S"
     start_time = datetime.datetime.strptime(data[2], dt_format)
     end_time = datetime.datetime.strptime(data[0], dt_format)
+    start_date = start_time.date()
     day_of_week = start_time.weekday()
     start_hour = start_time.hour
     end_hour = end_time.hour
@@ -38,18 +39,21 @@ def process(line):
         return
 
     if time_of_day_start == time_of_day_end:
-        print("{0}\t{1}\t{2}\t{3}".format(sta_id, day_of_week, type, time_of_day_start))
+        start_date = start_date.strftime("%m%d%Y")
+        print("{0}\t{1}\t{2}\t{3}\t{4}".format(sta_id, day_of_week, type, time_of_day_start, start_date))
     if time_of_day_start < time_of_day_end:
+        start_date = start_date.strftime("%m%d%Y")
         for i in range(int(time_of_day_end - time_of_day_start) + 1):
-            print("{0}\t{1}\t{2}\t{3}".format(sta_id, day_of_week, type, time_of_day_start+i))
+            print("{0}\t{1}\t{2}\t{3}\t{4}".format(sta_id, day_of_week, type, time_of_day_start+i, start_date))
     if time_of_day_start > time_of_day_end:
+        next_date = start_date + datetime.timedelta(days = 1)
         for i in range(int(time_of_day_start), 6):
-            print("{0}\t{1}\t{2}\t{3}".format(sta_id, day_of_week, type, i))
+            print("{0}\t{1}\t{2}\t{3}\t{4}".format(sta_id, day_of_week, type, i, start_date.strftime("%m%d%Y")))
         for i in range(0, int(time_of_day_end)+1):
             if day_of_week == 6:
-                print("{0}\t{1}\t{2}\t{3}".format(sta_id, 0, type, i))
+                print("{0}\t{1}\t{2}\t{3}\t{4}".format(sta_id, 0, type, i, next_date.strftime("%m%d%Y")))
             else:
-                print("{0}\t{1}\t{2}\t{3}".format(sta_id, day_of_week+1, type, i))
+                print("{0}\t{1}\t{2}\t{3}\t{4}".format(sta_id, day_of_week+1, type, i, next_date.strftime("%m%d%Y")))
 
 
 def get_incident_type(subject):
